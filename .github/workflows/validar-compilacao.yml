@@ -26,7 +26,7 @@ jobs:
             echo "   Certifique-se de que a PASTA existe na raiz do repositório."
             exit 1
           fi
-          echo "✅ PASTA 'praticas/' encontrada."        
+          echo "✅ PASTA 'praticas/' encontrada."
 
       - name: Compilar práticas
         run: |
@@ -39,20 +39,20 @@ jobs:
 
           for PASTA in ./praticas/*/; do
             [ -d "$PASTA" ] || continue
-            
+
             PASTA_NOME=$(basename "$PASTA")
             echo "📂 [$PASTA_NOME]"
-            
+
             ARQUIVOS_C=$(find "$PASTA" -maxdepth 1 -name "*.c" | sort)
-            
+
             if [ -z "$ARQUIVOS_C" ]; then
               echo "   ⚠️ Nenhum arquivo .c encontrado."
               continue
             fi
-            
+
             echo "   Compilando..."
-              
-            if gcc -Wall -Wextra -Werror -std=c11 "$PASTA/*.c" -o "$PASTA/main" -lm 2>&1; then
+
+            if gcc -Wall -Wextra -Werror -std=c11 $ARQUIVOS_C -o "$PASTA/main" -lm 2>&1; then
               echo "   ✅ SUCESSO"
               SUCESSOS=$((SUCESSOS + 1))
             else
@@ -65,16 +65,16 @@ jobs:
           echo "========================================"
           echo "📊 RESUMO: $SUCESSOS OK | $ERROS ERRO(S)"
           echo "========================================"
-          
+
           if [ $ERROS -gt 0 ]; then
             echo "❌ Corrija os erros acima e faça um novo commit/push."
             exit 1
           fi
-          
+
           if [ $SUCESSOS -eq 0 ]; then
             echo "⚠️ Nenhum arquivo .c foi compilado."
             echo "   Verifique se você criou os arquivos na PASTA correta."
             exit 1
           fi
-          
+
           echo "✅ Todos os arquivos compilaram com sucesso!"
